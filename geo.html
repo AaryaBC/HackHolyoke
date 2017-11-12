@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Add an icon to the map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/parse/1.10.2/parse.js'></script>
+    <script   src="https://code.jquery.com/jquery-3.2.1.slim.js"   integrity="sha256-tA8y0XqiwnpwmOIl3SGAcFl2RvxHjA8qp0+1uCGmRmg="   crossorigin="anonymous"></script>
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWFyeWFiYzQ5IiwiYSI6ImNqOXdoMjZxMzd0YzMzM3M0dWx4bTc3YnIifQ.Jbm1O-jhdifdOac6oNtfjA';
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v9',
+    center: [-72.5665458, 42.2548586], // starting position
+    zoom: 15 // starting zoom
+});
+
+map.on('load', function() {
+    map.loadImage('https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png', function(error, image) {
+        if (error) throw error;
+        map.addImage('cat', image);
+        map.addLayer({
+            "id": "points",
+            "type": "symbol",
+            "source": {
+                "type": "geojson",
+                "data": {
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [-72.5665458, 42.2548586]
+                        }
+                    }]
+                }
+            },
+            "layout": {
+                "icon-image": "cat",
+                "icon-size": 0.1
+            }
+        });
+    });
+});
+
+
+$(document).ready(function () {
+var results = [];
+
+Parse.initialize("campus-safety", "2773625");
+var Location = Parse.Object.extend("Location");
+var query = new Parse.Query(Location);
+console.log('reached here')
+query.find({
+    success: function (results) {
+        for (var i = 0; i < results.length; i++) {
+            var object = results[i];
+
+            // var Username = object.get('Username');
+            // var Game = object.get('Game');
+            // var Accuracy = object.get('Accuracy');
+            // var TimeUsed = object.get('TimeUsed');
+            // var Date = object.get('Date');
+            // var Time = object.get('Time');
+            // console.log(JSON.stringify(results));
+
+            console.log(object);
+
+            // results.push({
+            //     Username: Username,
+            //     Game: Game,
+            //     Accuracy: Accuracy,
+            //     TimeUsed: TimeUsed,
+            //     Date: Date,
+            //     Time: Time
+            // });
+        }
+    },
+    fail: function(error){
+      console.log('error')
+    }
+});
+});
+
+// $('#example').DataTable({
+//     data: results
+// });
+
+</script>
+
+</body>
+</html>
