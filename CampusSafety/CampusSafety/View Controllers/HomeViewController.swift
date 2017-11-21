@@ -14,6 +14,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate{
     
     let locationManager = CLLocationManager()
     
+    @IBOutlet weak var trackerLabel: UILabel!
     
     @IBOutlet weak var trackMeButton: UIButton!
     var tracking = true
@@ -29,16 +30,19 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate{
             locationManager.startUpdatingLocation()
             self.tracking = false
             self.trackMeButton.setTitle("I'm Safe", for: .normal)
+            self.trackerLabel.text = "Tracker On"
         }
         else{
             self.trackMeButton.setTitle("Track Me", for: .normal)
             locationManager.stopUpdatingLocation()
+            self.trackerLabel.text = "Tracker Off"
         }
     }
     
     @IBAction func getHelp(_ sender: Any) {
         self.safety = false
         self.color = "red"
+        self.trackerLabel.text = "HELP IS ON IT'S WAY"
     }
     
     //get location

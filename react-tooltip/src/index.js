@@ -8,6 +8,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmb
 Parse.initialize("campus-safety", "2773625")
 Parse.serverURL = "http://campus-safety.herokuapp.com/parse"
 var latLonPoints = []
+var ID = false
 
 class Application extends React.Component {
   tooltipContainer;
@@ -57,22 +58,34 @@ class Application extends React.Component {
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [-72.5665458, 42.2548586],
-      zoom: 15
+      zoom: 14
     });
 
     const tooltip = new mapboxgl.Marker(this.tooltipContainer, {
       offset: [-120, 0]
     }).setLngLat([0,0]).addTo(map);
-    
+
     map.on('click', (e) => {
+
+      // window.setInterval(function() {
+      //   // map.getSource('drone').setData(url);
+      //   console.log('hello')
+      // }, 100000000000000);
+      this.getData()
       const features = map.queryRenderedFeatures(e.point);
       tooltip.setLngLat(e.lngLat);
       map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-      this.setTooltip(features);
+      // this.setTooltip(features);
 
-      map.loadImage('https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png', function(error, image) {
+      if (ID){
+        map.removeImage('cat')
+        map.removeLayer('points')
+        map.removeSource('points')
+      }
+
+      map.loadImage('https://images.vexels.com/media/users/3/143600/isolated/preview/1b2a1e1747f67ce87ea8af5fdf410d23-yao-ming-face-meme-by-vexels.png', function(error, image) {
         if (error) throw error;
-        map.addImage('cat', image);
+        map.addImage('cat', image)
         map.addLayer({
             "id": "points",
             "type": "symbol",
@@ -84,7 +97,7 @@ class Application extends React.Component {
                         "type": "Feature",
                         "geometry": {
                             "type": "Point",
-                            "coordinates": latLonPoints[0]
+                            "coordinates": latLonPoints[latLonPoints.length - 1]
                         }
                     }]
                 }
@@ -95,6 +108,7 @@ class Application extends React.Component {
             }
         });
       });
+      ID = true;
 
     });
   }
